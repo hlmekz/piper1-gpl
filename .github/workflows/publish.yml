@@ -29,8 +29,18 @@ jobs:
 
       - name: Get version from setup.py
         run: |
-          VERSION=$(sed -n "s/.*version=['\"]\([^'\"]*\)['\"].*/\1/p" setup.py)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          python - <<'EOF'
+          import re, pathlib, os
+
+          text = pathlib.Path("setup.py").read_text(encoding="utf-8")
+          m = re.search(r"version\s*=\s*['\"]([^'\"]+)['\"]", text)
+          if not m:
+              raise RuntimeError("Version not found")
+          version = m.group(1)
+
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+              f.write(f"VERSION={version}\n")
+          EOF
 
       - name: Verify tag
         id: read_ver
