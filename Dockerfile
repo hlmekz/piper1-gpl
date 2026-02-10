@@ -29,3 +29,4 @@ COPY docker/entrypoint.sh /
 EXPOSE 5000
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["server", "--model", "tr_TR-dfki-medium"]
