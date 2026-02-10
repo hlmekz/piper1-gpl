@@ -28,5 +28,5 @@ COPY docker/entrypoint.sh /
 
 EXPOSE 5000
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["server", "--model", "tr_TR-dfki-medium"]
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["python3 -m piper.download_voices --data-dir /data tr_TR-dfki-medium && python3 -m piper.http_server --host 0.0.0.0 --data-dir /data --model tr_TR-dfki-medium"]
