@@ -19,6 +19,8 @@ FROM python:3.12-slim
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=builder /app/dist/piper_tts-*linux*.whl ./dist/
 RUN pip3 install ./dist/piper_tts-*linux*.whl
