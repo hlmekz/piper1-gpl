@@ -281,7 +281,18 @@ def main() -> None:
 
                     wav_file.writeframes(audio_chunk.audio_int16_bytes)
 
-            return wav_io.getvalue()
+            wav_bytes = wav_io.getvalue()
+
+        output_format = data.get("format", "wav")
+        if output_format == "mp3":
+            import subprocess
+            proc = subprocess.run(
+                ["ffmpeg", "-i", "pipe:0", "-f", "mp3", "-ab", "192k", "pipe:1"],
+                input=wav_bytes, capture_output=True
+            )
+            return app.response_class(proc.stdout, mimetype="audio/mpeg")
+
+        return wav_bytes
 
     app.run(host=args.host, port=args.port)
 
